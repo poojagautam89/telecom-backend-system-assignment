@@ -24,3 +24,24 @@ It is built using Spring Boot (Java 17) and uses NeonDB (PostgreSQL) as the clou
 - Maven  
 
 **19-Nov-2025 — Completed Spring Boot project setup and NeonDB integration**
+
+## Swagger-UI
+**20-Nov-2025 — Added Swagger & Validation Setup**
+- Added Swagger/OpenAPI documentation using Springdoc
+- Created OpenApiConfig for API documentation
+- Updated pom.xml with Swagger/OpenAPI dependencies
+- Added validation support using spring-boot-starter-validation
+- Verified Swagger UI loads correctly at /swagger-ui/index.html
+- 
+## Postman and adding logs
+**21-Nov-2025 — Implemented Subscriber Module & Completed Sprint-1**
+- Edit implemented complete Subscriber CRUD Module
+- Entity, DTOs, Repository
+- Service + ServiceImpl
+- Controller with REST endpoints
+- Added logging using @Slf4j
+- Added Global Exception Handling (GlobalExceptionHandler)
+- Added temporary SecurityConfig to allow Swagger/API access
+- Added JUnit tests for SubscriberServiceImpl
+- Added Postman collection for Subscriber APIs
+- Sprint-1 subscriber functionality fully completed

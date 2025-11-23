@@ -12,6 +12,4 @@ public interface SubscriberService {
     List<SubscriberResponseDTO> listSubscribers(String status);
     SubscriberResponseDTO updateSubscriber(UUID id, SubscriberRequestDTO request);
     void deleteSubscriber(UUID id);
-    SubscriberResponseDTO activateSubscriber(UUID id);
-    SubscriberResponseDTO suspendSubscriber(UUID id);
 }

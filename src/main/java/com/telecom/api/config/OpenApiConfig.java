@@ -14,6 +14,10 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Telecom Subscriber & Billing API")
                         .version("1.0.0")
-                        .description("APIs for Subscriber management - Sprint 1"));
+                        .description(
+                                "Sprint 1: Subscriber Management\n" +
+                                        "Sprint 2: SIM Activation, Plan Provisioning, Search/Filter APIs, Exception Patterns"
+                        )
+                );
     }
 }

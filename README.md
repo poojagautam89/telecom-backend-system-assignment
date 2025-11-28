@@ -45,3 +45,25 @@ It is built using Spring Boot (Java 17) and uses NeonDB (PostgreSQL) as the clou
 - Added JUnit tests for SubscriberServiceImpl
 - Added Postman collection for Subscriber APIs
 - Sprint-1 subscriber functionality fully completed
+
+# Flyway Migrations (Assignment Requirement)
+25-Nov-2025 - Sprint-1 (V1 Migration)
+**V1__create_subscriber_table.sql**
+- Created `subscribers` table
+- Structure exactly matches Assignment class diagram
+
+## Sprint-2 work start
+26-Nov-2025 Sprint-2 (V2 Migration)
+**V2__create_sim_and_plan.sql**
+- Created `plan` table
+- Created `sim` table
+- Added required foreign keys:
+    - SIM → Subscriber
+    - SIM → Plan
+      - SIM → Subscriber = Many-to-One
+        (One subscriber can have multiple SIMs)
+      - SIM → Plan = Many-to-One
+        (One plan can be assigned to multiple SIMs)
+
+    - Added basic indexes
+    - Migration executed successfully on NeonDB

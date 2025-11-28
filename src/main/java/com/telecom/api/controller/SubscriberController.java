@@ -3,12 +3,14 @@ package com.telecom.api.controller;
 import com.telecom.api.dto.SubscriberRequestDTO;
 import com.telecom.api.dto.SubscriberResponseDTO;
 import com.telecom.api.service.SubscriberService;
-
-import lombok.extern.slf4j.Slf4j;
+import com.telecom.api.utils.LoggingUtils;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +27,21 @@ public class SubscriberController {
 
     @PostMapping
     public ResponseEntity<SubscriberResponseDTO> create(@Valid @RequestBody SubscriberRequestDTO req) {
-        log.info("API POST /api/subscribers called - phoneNumber: {}", req.getPhoneNumber());
+        // Mask phone number for logs to avoid logging full PII
+        String masked = LoggingUtils.maskMsisdn(req.getPhoneNumber());
+        log.info("API POST /api/subscribers called - phoneNumber: {}", masked);
+
         SubscriberResponseDTO res = service.createSubscriber(req);
         log.debug("Create response - id: {}", res.getSubscriberId());
-        return ResponseEntity.ok(res);
+
+        // Build Location URI: /api/subscribers/{id}
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(res.getSubscriberId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(res);
     }
 
     @GetMapping("/{id}")
@@ -48,7 +61,8 @@ public class SubscriberController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SubscriberResponseDTO> update(@PathVariable("id") UUID id, @Valid @RequestBody SubscriberRequestDTO req) {
-        log.info("API PUT /api/subscribers/{} called", id);
+        String masked = LoggingUtils.maskMsisdn(req.getPhoneNumber());
+        log.info("API PUT /api/subscribers/{} called - phoneNumber: {}", id, masked);
         SubscriberResponseDTO res = service.updateSubscriber(id, req);
         log.debug("Update completed for id={}", id);
         return ResponseEntity.ok(res);

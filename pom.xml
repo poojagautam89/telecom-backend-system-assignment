@@ -52,6 +52,15 @@
             <version>2.7.0</version>
         </dependency>
 
+        <!-- Add / upgrade Flyway so it knows PostgreSQL 17 -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.22.0</version>   <!-- ya jo latest stable ho -->
+        </dependency>
+
+
+
 
 
         <!--        <dependency>-->
@@ -117,6 +126,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

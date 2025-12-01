@@ -1,35 +1,38 @@
--- V2__create_sim_and_plan.sql
--- Sprint-2: create plan and sim tables (matching client needs)
-
--- OPTIONAL: enable pgcrypto for gen_random_uuid()
+-- V2__create_plans_and_sims.sql
+-- Ensure pgcrypto for gen_random_uuid() if you want DB-side UUID generation
 -- CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- Create PLAN table first
-CREATE TABLE IF NOT EXISTS plan (
+-- Create PLANS table matching Plan entity
+CREATE TABLE IF NOT EXISTS plans (
   plan_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  plan_name TEXT NOT NULL,
-  data_limit_per_day DOUBLE PRECISION,
-  validity_days INTEGER,
-  sms_limit_per_day INTEGER,
-  price NUMERIC(12,2),
-  plan_type TEXT,
+  plan_name VARCHAR(100) NOT NULL,
+  plan_type VARCHAR(20) NOT NULL,
+  monthly_price NUMERIC(12,2) NOT NULL DEFAULT 0,
+  data_allowance_mb BIGINT NOT NULL DEFAULT 0,
+  call_allowance_min BIGINT NOT NULL DEFAULT 0,
+  sms_allowance BIGINT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT now()
 );
 
--- Create SIM table (references subscribers and plan)
-CREATE TABLE IF NOT EXISTS sim (
+-- Create SIMS table matching Sim entity
+CREATE TABLE IF NOT EXISTS sims (
   sim_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  imsi VARCHAR(64) NOT NULL UNIQUE,
+  msisdn VARCHAR(32) UNIQUE,
   subscriber_id UUID NOT NULL,
-  sim_number TEXT UNIQUE NOT NULL,
-  imei_number TEXT,
-  status TEXT NOT NULL,
-  assigned_plan_id UUID,
+  plan_id UUID,
+  status VARCHAR(16) NOT NULL DEFAULT 'INACTIVE',
   activation_date DATE,
-  created_at TIMESTAMP DEFAULT now(),
-  CONSTRAINT fk_sim_subscriber FOREIGN KEY (subscriber_id) REFERENCES subscribers(subscriber_id),
-  CONSTRAINT fk_sim_plan FOREIGN KEY (assigned_plan_id) REFERENCES plan(plan_id)
+  created_at TIMESTAMP DEFAULT now()
 );
 
--- Useful indexes
-CREATE INDEX IF NOT EXISTS idx_sim_subscriber_id ON sim(subscriber_id);
-CREATE INDEX IF NOT EXISTS idx_sim_status ON sim(status);
+-- Foreign keys
+ALTER TABLE sims
+  ADD CONSTRAINT fk_sims_subscriber FOREIGN KEY (subscriber_id) REFERENCES subscribers(subscriber_id);
+
+ALTER TABLE sims
+  ADD CONSTRAINT fk_sims_plan FOREIGN KEY (plan_id) REFERENCES plans(plan_id);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_sims_subscriber_id ON sims(subscriber_id);
+CREATE INDEX IF NOT EXISTS idx_sims_status ON sims(status);

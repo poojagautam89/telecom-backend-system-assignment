@@ -67,3 +67,45 @@ It is built using Spring Boot (Java 17) and uses NeonDB (PostgreSQL) as the clou
 
     - Added basic indexes
     - Migration executed successfully on NeonDB
+## Sprint-2 – Work Completed
+**27 Nov 2025 — SIM Activation Module**
+- Implemented SIM activation API
+- Added SIM entity, DTO, repository
+- Added Service + ServiceImpl
+- Implemented SIM lifecycle states (ACTIVE / BLOCKED)
+
+**28-Nov-2025 — Plan Module Completed**
+- Implemented Plan CRUD APIs
+- Added plan allowances (DATA / SMS / CALL)
+- Added API to assign a plan to SIM
+
+
+**01-Dec-2025 — Sprint-2 Documentation**
+- Updated Postman collection
+- Added tests for SIM and Plan services
+
+## Sprint-3 Work Start (Up to 02-Dec-2025)
+**02-Dec-2025 — Usage Tracking Module (V3 Migration)**
+- Created `usage` table (CALL / DATA / SMS)
+- Added foreign key: Usage → SIM
+- Created Usage Entity, DTO, Repository
+- Added API to log telecom usage
+
+**03-Dec-2025 — Billing Engine Development**
+- Created Billing Entity, DTO, Repository
+- Implemented billing calculation logic:
+    - Extra Data = ₹10/GB
+    - Extra SMS = ₹0.5/SMS
+    - Extra Call Minutes = ₹1/min
+- Added BillingService to calculate monthly bills
+
+**04-Dec-2025 — Billing APIs Completed**
+- Added billing APIs
+- Tested billing logic with sample usage
+- Updated Swagger documentation for Billing module
+**05-Dec-2025** — All Subscriber, SIM, Plan, Usage, and Billing APIs were fully tested in Postman
+- Verified request/response correctness for each module
+- Ensured all endpoints are working as expected
+- Checked validation, error handling, and success flows
+- Postman collection updated with all Sprint-3 APIs
+

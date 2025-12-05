@@ -16,7 +16,8 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .description(
                                 "Sprint 1: Subscriber Management\n" +
-                                        "Sprint 2: SIM Activation, Plan Provisioning, Search/Filter APIs, Exception Patterns"
+                                        "Sprint 2: SIM Activation, Plan Provisioning, Search/Filter APIs, Exception Patterns\n" +
+                                        "Sprint 3: Usage Tracking, Billing Engine, JWT Authentication, RBAC, Docker Setup"
                         )
                 );
     }

@@ -1,60 +1,61 @@
 package com.telecom.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.telecom.api.entity.Bill;
+import com.telecom.api.dto.InvoiceResponseDTO;
 import com.telecom.api.service.BillingService;
+import com.telecom.api.service.InvoiceService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.util.UUID;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(BillingController.class)
-@ExtendWith(MockitoExtension.class)
-class BillingControllerTest {
 
-    @Autowired
+@ExtendWith(MockitoExtension.class)
+class BillingControllerInvoiceTest {
+
+    @Mock private InvoiceService invoiceService;
+    @Mock private BillingService billingService;
+    @InjectMocks private BillingController billingController;
+
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private BillingService billingService;
-
-    @Autowired
-    ObjectMapper objectMapper;
+    @BeforeEach
+    void setUp(){
+        mockMvc = MockMvcBuilders.standaloneSetup(billingController).build();
+    }
 
     @Test
-    void generateBill_returns200() throws Exception {
-        UUID simId = UUID.randomUUID();
-        String month = "2025-11";
+    void getInvoiceJson_returns200() throws Exception {
+        InvoiceResponseDTO dto = new InvoiceResponseDTO();
+        dto.setBillId(200L);
+        dto.setTotalAmount(BigDecimal.valueOf(125));
+        dto.setBillingMonth("2025-11");
+        dto.setGeneratedAt(LocalDateTime.now());
+        when(invoiceService.getInvoice(200L)).thenReturn(dto);
 
-        Bill bill = new Bill();
-        bill.setId(1L);
-        bill.setBillingMonth(month);
-        bill.setTotalAmount(BigDecimal.valueOf(250.50));
-        bill.setGeneratedAt(LocalDateTime.now());
-
-        Mockito.when(billingService.generateBill(eq(simId), eq(YearMonth.parse(month))))
-                .thenReturn(bill);
-
-        mockMvc.perform(get("/api/billing/generate/" + simId + "/" + month)
+        mockMvc.perform(get("/api/billing/200/invoice")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.billingMonth").value(month))
-                .andExpect(jsonPath("$.totalAmount").value(250.50));
+                .andExpect(jsonPath("$.billId").value(200));
+    }
+
+    @Test
+    void getInvoicePdf_returnsPdf() throws Exception {
+        when(invoiceService.generateInvoicePdf(200L)).thenReturn(new byte[]{1,2,3});
+        mockMvc.perform(get("/api/billing/200/invoice/pdf"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=invoice-200.pdf"))
+                .andExpect(content().contentType(MediaType.APPLICATION_PDF));
     }
 }

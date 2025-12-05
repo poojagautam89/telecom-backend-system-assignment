@@ -7,6 +7,7 @@ import com.telecom.api.utils.LoggingUtils;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,16 +26,17 @@ public class SubscriberController {
         this.service = service;
     }
 
+    // ============================
+    // ADMIN ONLY: create subscriber
+    // ============================
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<SubscriberResponseDTO> create(@Valid @RequestBody SubscriberRequestDTO req) {
-        // Mask phone number for logs to avoid logging full PII
         String masked = LoggingUtils.maskMsisdn(req.getPhoneNumber());
         log.info("API POST /api/subscribers called - phoneNumber: {}", masked);
 
         SubscriberResponseDTO res = service.createSubscriber(req);
-        log.debug("Create response - id: {}", res.getSubscriberId());
 
-        // Build Location URI: /api/subscribers/{id}
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -44,6 +46,10 @@ public class SubscriberController {
         return ResponseEntity.created(location).body(res);
     }
 
+    // ============================
+    // USER + ADMIN: get subscriber by ID
+    // ============================
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<SubscriberResponseDTO> getById(@PathVariable("id") UUID id) {
         log.info("API GET /api/subscribers/{} called", id);
@@ -51,6 +57,10 @@ public class SubscriberController {
         return ResponseEntity.ok(res);
     }
 
+    // ============================
+    // USER + ADMIN: list subscribers (READ-ONLY)
+    // ============================
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<SubscriberResponseDTO>> list(@RequestParam(value = "status", required = false) String status) {
         log.info("API GET /api/subscribers called with status={}", status);
@@ -59,15 +69,25 @@ public class SubscriberController {
         return ResponseEntity.ok(list);
     }
 
+    // ============================
+    // ADMIN ONLY: update subscriber
+    // ============================
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<SubscriberResponseDTO> update(@PathVariable("id") UUID id, @Valid @RequestBody SubscriberRequestDTO req) {
         String masked = LoggingUtils.maskMsisdn(req.getPhoneNumber());
         log.info("API PUT /api/subscribers/{} called - phoneNumber: {}", id, masked);
+
         SubscriberResponseDTO res = service.updateSubscriber(id, req);
         log.debug("Update completed for id={}", id);
+
         return ResponseEntity.ok(res);
     }
 
+    // ============================
+    // ADMIN ONLY: delete subscriber
+    // ============================
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         log.info("API DELETE /api/subscribers/{} called", id);

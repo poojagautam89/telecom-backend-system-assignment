@@ -28,7 +28,6 @@ public class Plan {
     @Column(name = "monthly_price", precision = 12, scale = 2, nullable = false)
     private BigDecimal monthlyPrice;
 
-    // Allowances (as per client billing rules − Sprint-2)
     @Column(name = "data_allowance_mb", nullable = false)
     private Long dataAllowanceMb;     // Data allowance MB
 

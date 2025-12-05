@@ -1,0 +1,17 @@
+# Build / IDE
+target/
+.idea/
+.vscode/
+*.iml
+.mvn/
+
+# Git
+.git
+.gitignore
+
+# OS
+.DS_Store
+
+# Secrets and local config - DO NOT ADD to image
+.env
+**/application-*.properties

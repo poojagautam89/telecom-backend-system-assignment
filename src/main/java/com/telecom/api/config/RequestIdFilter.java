@@ -31,7 +31,6 @@ public class RequestIdFilter extends HttpFilter {
         }
 
         MDC.put(MDC_REQUEST_ID, requestId);
-        // also expose it in response header for clients
         response.setHeader(REQUEST_ID_HEADER, requestId);
         try {
             chain.doFilter(request, response);

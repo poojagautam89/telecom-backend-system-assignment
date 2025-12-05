@@ -5,6 +5,7 @@ import com.telecom.api.dto.PlanRequestDTO;
 import com.telecom.api.service.PlanService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +21,11 @@ public class PlanController {
         this.planService = planService;
     }
 
+    // ADMIN only: create plan
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Plan> create(@Valid @RequestBody PlanRequestDTO req) {
         Plan p = new Plan();
-        // map fields
         p.setName(req.getName());
         p.setType(req.getType());
         p.setMonthlyPrice(req.getMonthlyPrice());
@@ -34,16 +36,22 @@ public class PlanController {
         return ResponseEntity.status(201).body(saved);
     }
 
+    // USER + ADMIN: list plans
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping
     public ResponseEntity<List<Plan>> all() {
         return ResponseEntity.ok(planService.getAll());
     }
 
+    // USER + ADMIN: get plan by id
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Plan> get(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(planService.get(id));
     }
 
+    // ADMIN only: update plan
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Plan> update(@PathVariable("id") UUID id, @Valid @RequestBody PlanRequestDTO req) {
         Plan p = new Plan();
@@ -56,6 +64,8 @@ public class PlanController {
         return ResponseEntity.ok(planService.update(id, p));
     }
 
+    // ADMIN only: delete plan
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
         planService.delete(id);

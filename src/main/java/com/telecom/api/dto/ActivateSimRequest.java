@@ -11,5 +11,5 @@ public class ActivateSimRequest {
     @NotNull
     private String imsi;
     private String msisdn;
-    // getters/setters
+
 }

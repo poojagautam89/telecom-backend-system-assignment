@@ -1,4 +1,9 @@
 package com.telecom.api.enum_pack;
 
-public class PaymentStatus {
+
+public enum PaymentStatus {
+    PENDING,
+    SUCCESS,
+    FAILED,
+    REFUNDED
 }

@@ -5,6 +5,7 @@ import com.telecom.api.dto.UsageRequest;
 import com.telecom.api.service.UsageService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +17,7 @@ public class UsageController {
     public UsageController(UsageService usageService) {
         this.usageService = usageService;
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Void> ingest(@Valid @RequestBody UsageRequest request) {
         usageService.saveUsage(request);

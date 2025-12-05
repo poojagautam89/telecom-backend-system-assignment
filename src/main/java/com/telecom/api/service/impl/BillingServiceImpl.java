@@ -25,7 +25,6 @@ public class BillingServiceImpl implements BillingService {
     private final BillRepository billRepo;
     private final PlanRepository planRepo;
 
-    // rates (client)
     private static final BigDecimal RATE_PER_GB = new BigDecimal("10.00"); // ₹10 per GB
     private static final BigDecimal RATE_PER_SMS = new BigDecimal("0.5");
     private static final BigDecimal RATE_PER_MIN = new BigDecimal("1.0");

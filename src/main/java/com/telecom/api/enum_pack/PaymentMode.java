@@ -1,4 +1,11 @@
 package com.telecom.api.enum_pack;
 
-public class PaymentMode {
+
+public enum PaymentMode {
+    UPI,
+    CARD,
+    NET_BANKING,
+    WALLET,
+    CASH
 }
+

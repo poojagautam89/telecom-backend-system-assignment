@@ -2,9 +2,16 @@ package com.telecom.api.entity;
 
 import com.telecom.api.enum_pack.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Data
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -28,5 +35,4 @@ public class User {
         this.role = role;
     }
 
-    // Getters & Setters
 }
